@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hanam Hanum</title>
     <!-- Dynamic Favicon -->
-    <link id="dynamicFavicon" rel="icon" type="image/png" href="https://s6.imgcdn.dev/YfkbUy.png">
+    <link id="dynamicFavicon" rel="icon" type="image/png" href="https://s6.imgcdn.dev/Y3dmj8.png">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -87,7 +87,7 @@
     <div id="loginScreen" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 transition-opacity duration-300">
         <div class="glass-panel p-8 rounded-2xl shadow-2xl w-[90%] max-w-md transform transition-all">
             <div class="text-center mb-8">
-                <img id="loginLogo" src="https://s6.imgcdn.dev/YfkbUy.png" alt="Logo" class="w-24 h-24 mx-auto mb-4 drop-shadow-lg object-contain bg-white rounded-full p-2">
+                <img id="loginLogo" src="https://www.dsppa.smartnusantara.com/image/cop.png" alt="Logo" class="w-24 h-24 mx-auto mb-4 drop-shadow-lg object-contain bg-white rounded-full p-2">
                 <h1 class="text-2xl font-bold text-slate-800" id="loginTitle">Inventory Login</h1>
                 <p class="text-sm text-slate-500 mt-1">Silakan masuk ke akun Anda</p>
             </div>
@@ -232,19 +232,8 @@
                     </div>
                 </div>
                 
-                <!-- Kartu Khusus Store -->
-                <div class="store-only-card bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl p-5 text-white shadow-lg shadow-blue-500/20 relative overflow-hidden transition-all hover:-translate-y-1">
-                    <div class="absolute -right-4 -top-4 opacity-20"><i class="fa-solid fa-snowflake text-7xl"></i></div>
-                    <p class="text-blue-100 text-sm font-medium mb-1">Bahan Frozen</p>
-                    <h3 class="text-3xl font-bold mb-2" id="dashFrozenCount">0 <span class="text-sm font-normal">Item</span></h3>
-                    <p class="text-xs text-blue-100">Tersedia di Database</p>
-                </div>
-                <div class="store-only-card bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-5 text-white shadow-lg shadow-amber-500/20 relative overflow-hidden transition-all hover:-translate-y-1">
-                    <div class="absolute -right-4 -top-4 opacity-20"><i class="fa-solid fa-box-open text-7xl"></i></div>
-                    <p class="text-amber-100 text-sm font-medium mb-1">Bahan Dry</p>
-                    <h3 class="text-3xl font-bold mb-2" id="dashDryCount">0 <span class="text-sm font-normal">Item</span></h3>
-                    <p class="text-xs text-amber-100">Tersedia di Database</p>
-                </div>
+                <!-- Placeholder untuk Kartu Kategori Dinamis -->
+                <div id="placeholderDynamicCards" class="contents store-only-card"></div>
 
                 <!-- Kartu Khusus Admin Warehouse -->
                 <div class="wh-only-card hidden bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-5 text-white shadow-lg shadow-indigo-500/20 relative overflow-hidden transition-all hover:-translate-y-1">
@@ -284,9 +273,8 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
                     <h3 class="font-bold text-slate-800 mb-4">Komposisi Bahan</h3>
                     <div class="relative h-48 w-full flex justify-center data-fade" id="wrapChartPie"><canvas id="pieChart"></canvas></div>
-                    <div class="mt-4 flex justify-center gap-4 text-sm font-medium text-slate-600">
-                        <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-blue-500 shadow-sm"></div> Frozen</div>
-                        <div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full bg-amber-500 shadow-sm"></div> Dry</div>
+                    <!-- Legend Dinamis untuk Pie Chart -->
+                    <div class="mt-4 flex justify-center flex-wrap gap-4 text-sm font-medium text-slate-600" id="pieChartLegend">
                     </div>
                 </div>
             </div>
@@ -455,7 +443,7 @@
                         </div>
                         <div class="w-full">
                             <select id="scanHistCategory" onchange="filterScanHistory()" class="w-full border border-slate-200 bg-slate-50 rounded-lg px-3 py-2 text-sm outline-none shadow-sm">
-                                <option value="">Semua Kategori</option><option value="Frozen">Frozen</option><option value="Dry">Dry</option>
+                                <option value="">Semua Kategori</option>
                             </select>
                         </div>
                         <div class="relative w-full admin-only-element" id="wrap-filter-resto-scan">
@@ -636,7 +624,7 @@
                             <input type="date" id="filterEndDate" onchange="filterTable()" class="border border-slate-200 bg-slate-50 rounded-lg px-3 py-2 text-sm outline-none w-full sm:w-auto shadow-sm">
                         </div>
                         <select id="filterCategory" onchange="filterTable()" class="border border-slate-200 bg-slate-50 rounded-lg px-3 py-2 text-sm outline-none w-full sm:w-auto shadow-sm">
-                            <option value="">Semua Kategori</option><option value="Frozen">Frozen</option><option value="Dry">Dry</option>
+                            <option value="">Semua Kategori</option>
                         </select>
                         
                         <div class="relative w-full sm:w-48 admin-only-element" id="wrap-filter-resto-data">
@@ -680,6 +668,7 @@
             <div class="flex overflow-x-auto hide-scroll gap-2 border-b border-slate-200 pb-2 shrink-0 mt-2">
                 <button onclick="switchSetTab('app')" id="tabBtn-app" class="px-4 py-2 text-sm font-medium rounded-lg bg-blue-50 text-blue-600 transition-colors whitespace-nowrap">Aplikasi</button>
                 <button onclick="switchSetTab('resto')" id="tabBtn-resto" class="px-4 py-2 text-sm font-medium rounded-lg text-slate-500 hover:bg-slate-50 transition-colors whitespace-nowrap">Data Resto</button>
+                <button onclick="switchSetTab('kategori')" id="tabBtn-kategori" class="px-4 py-2 text-sm font-medium rounded-lg text-slate-500 hover:bg-slate-50 transition-colors whitespace-nowrap">Kategori Bahan</button>
                 <button onclick="switchSetTab('user')" id="tabBtn-user" class="px-4 py-2 text-sm font-medium rounded-lg text-slate-500 hover:bg-slate-50 transition-colors whitespace-nowrap">Pengguna Akses</button>
                 <button onclick="switchSetTab('master')" id="tabBtn-master" class="px-4 py-2 text-sm font-medium rounded-lg text-slate-500 hover:bg-slate-50 transition-colors whitespace-nowrap">Master Data Bahan</button>
             </div>
@@ -707,6 +696,24 @@
                     </div>
                     <div class="border border-slate-200 rounded-xl overflow-x-auto mt-4">
                         <table class="w-full text-left text-sm whitespace-nowrap min-w-max"><thead class="bg-slate-50 border-b border-slate-200"><tr><th class="px-5 py-3">Nama Resto</th><th class="px-5 py-3 w-24 text-center">Aksi</th></tr></thead><tbody id="tblRestoList" class="divide-y divide-slate-100"></tbody></table>
+                    </div>
+                </div>
+                <!-- Kategori Bahan Tab -->
+                <div id="setTab-kategori" class="hidden space-y-5">
+                    <h3 class="text-lg font-bold text-slate-700 border-b pb-2">Manajemen Kategori Bahan</h3>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="text" id="setNewCategory" class="w-full sm:flex-1 border border-slate-300 rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500" placeholder="Kategori Baru (Contoh: Bumbu)...">
+                        <button onclick="saveNewCategory()" class="w-full sm:w-auto shrink-0 bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-plus"></i> <span>Tambah</span>
+                        </button>
+                    </div>
+                    <div class="border border-slate-200 rounded-xl overflow-x-auto mt-4">
+                        <table class="w-full text-left text-sm whitespace-nowrap min-w-max">
+                            <thead class="bg-slate-50 border-b border-slate-200">
+                                <tr><th class="px-5 py-3">Nama Kategori</th><th class="px-5 py-3 w-24 text-center">Aksi</th></tr>
+                            </thead>
+                            <tbody id="tblCategoryList" class="divide-y divide-slate-100"></tbody>
+                        </table>
                     </div>
                 </div>
                 <!-- User Tab -->
@@ -739,7 +746,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                             <div><label class="block text-sm mb-1">Kode Bahan</label><input type="text" id="setMstKode" class="w-full border border-slate-300 rounded-lg px-3 py-2 uppercase font-mono"></div>
                             <div class="md:col-span-2"><label class="block text-sm mb-1">Nama Bahan</label><input type="text" id="setMstNama" class="w-full border border-slate-300 rounded-lg px-3 py-2"></div>
-                            <div><label class="block text-sm mb-1">Kategori</label><select id="setMstKat" class="w-full border border-slate-300 rounded-lg px-3 py-2"><option value="Frozen">Frozen</option><option value="Dry">Dry</option></select></div>
+                            <div><label class="block text-sm mb-1">Kategori</label><select id="setMstKat" class="w-full border border-slate-300 rounded-lg px-3 py-2"></select></div>
                             <div class="md:col-span-2"><label class="block text-sm mb-1">Pilihan Resto</label><select id="setMstResto" class="w-full border border-slate-300 rounded-lg px-3 py-2 set-resto-select"></select></div>
                         </div>
                         <div class="p-4 border border-blue-200 bg-blue-50/50 rounded-lg flex flex-col md:flex-row gap-3">
@@ -761,7 +768,7 @@
         // --- REAL STATE MANAGEMENT ---
         const State = {
             user: null, settings: {}, restos: [], users: [], masterData: [], stockData: [],
-            inHistory: [], outHistory: [], adjustments: [],
+            inHistory: [], outHistory: [], adjustments: [], categories: [],
             currentView: 'dashboard', transactionType: 'inbound',
             
             // Checkbox Filter State for Dashboard, Datatable & Scan History
@@ -812,6 +819,8 @@
 
             runGas('getAppData').then(data => {
                 syncLocalState(data);
+                populateCategoryDropdowns(); // Populate the new dynamic categories
+                
                 State.selectedRestosDash = [...State.restos]; 
                 State.selectedRestosData = [...State.restos];
                 State.selectedRestosScan = [...State.restos];
@@ -866,6 +875,24 @@
         function toggleDropdown(id) {
             const dd = document.getElementById(id); if(dd) dd.classList.toggle('hidden');
         }
+        
+        // --- POPULATE DYNAMIC CATEGORIES ---
+        function populateCategoryDropdowns() {
+            if (!State.categories || State.categories.length === 0) {
+                State.categories = ['Buah', 'Sayur', 'Bahan Baku']; // Default requirements
+            }
+            const opts = State.categories.map(c => `<option value="${c}">${c}</option>`).join('');
+            const filterOpts = `<option value="">Semua Kategori</option>` + opts;
+
+            const fc = document.getElementById('filterCategory');
+            if(fc) fc.innerHTML = filterOpts;
+
+            const sc = document.getElementById('scanHistCategory');
+            if(sc) sc.innerHTML = filterOpts;
+
+            const mk = document.getElementById('setMstKat');
+            if(mk) mk.innerHTML = opts;
+        }
 
         // FUNGSI SINKRONISASI - Diberi fallback object aman
         function syncLocalState(data, keepLocalStock = false) {
@@ -875,6 +902,8 @@
             State.restos = data.restos || State.restos || []; 
             State.users = data.users || State.users || [];
             State.masterData = data.master || State.masterData || []; 
+            
+            State.categories = data.categories || State.categories || ['Buah', 'Sayur', 'Bahan Baku'];
             
             if (!keepLocalStock) {
                 let rawStock = data.stock || [];
@@ -947,6 +976,7 @@
 
             runGas('getAppData').then(data => {
                 syncLocalState(data, false); 
+                populateCategoryDropdowns();
                 
                 if (State.currentView === 'dashboard') {
                     refreshDashboard();
@@ -957,6 +987,7 @@
                     renderRestoTable(); 
                     renderUserTable(); 
                     renderMasterTable();
+                    renderCategoryTable();
                 } else if (State.currentView === 'pengiriman') {
                     setupDropdownBahan('sj');
                 } else {
@@ -1019,7 +1050,7 @@
             document.getElementById('loginTitle').textContent = State.settings.app_title || 'Inventory Login';
             document.title = State.settings.app_title || 'Hanam Hanum';
             
-            const logoUrl = State.settings.logo_url || 'https://s6.imgcdn.dev/YfkbUy.png';
+            const logoUrl = State.settings.logo_url || 'https://s6.imgcdn.dev/Y3dmj8.png';
             document.getElementById('loginLogo').src = logoUrl;
             document.getElementById('appLogo').src = logoUrl;
             document.getElementById('mobileAppLogo').src = logoUrl;
@@ -1055,7 +1086,6 @@
                     }
 
                     State.user = res.user;
-                    // Jika admin / warehouse, akses semua resto. 
                     const r = (State.user.role === 'Admin' || State.user.role === 'Admin Warehouse') ? [...State.restos] : [State.user.resto];
                     State.selectedRestosDash = [...r]; State.selectedRestosData = [...r]; State.selectedRestosScan = [...r];
 
@@ -1210,10 +1240,20 @@
                 const fOut = State.outHistory.filter(t => filterDataLogic(t.Tanggal, t.Resto, sDate, eDate, selRestos));
                 const fStock = State.stockData.filter(s => selRestos.length === 0 || selRestos.includes(s.Resto));
 
-                let inStats = {}; let outStats = {}; let f=0; let d=0;
+                let inStats = {}; let outStats = {}; 
                 fIn.forEach(trx => inStats[trx.Satuan] = (inStats[trx.Satuan]||0) + parseInt(trx.Qty));
                 fOut.forEach(trx => outStats[trx.Satuan] = (outStats[trx.Satuan]||0) + Math.abs(parseInt(trx.Qty)));
-                fStock.forEach(s => { if(s.Kategori==='Frozen') f++; else d++; });
+                
+                // Menghitung jumlah per kategori dinamis
+                let catStats = {};
+                State.categories.forEach(c => catStats[c] = 0);
+                fStock.forEach(s => {
+                    if (catStats[s.Kategori] !== undefined) {
+                        catStats[s.Kategori]++;
+                    } else {
+                        catStats[s.Kategori] = 1; // Jika ada bahan yang belum dikategorikan atau kat lama
+                    }
+                });
 
                 const formatHtml = (stats) => {
                     const ent = Object.entries(stats).sort((a,b)=>b[1]-a[1]);
@@ -1224,12 +1264,32 @@
 
                 document.getElementById('dashTotalInUnits').innerHTML = formatHtml(inStats);
                 document.getElementById('dashTotalOutUnits').innerHTML = formatHtml(outStats);
-                document.getElementById('dashFrozenCount').innerHTML = `${f} <span class="text-sm font-normal">Item</span>`;
-                document.getElementById('dashDryCount').innerHTML = `${d} <span class="text-sm font-normal">Item</span>`;
+                
+                // --- Generate Kartu Khusus Store Dinamis ---
+                const dynContainer = document.getElementById('placeholderDynamicCards');
+                if(dynContainer) {
+                    const cardThemes = [
+                        {bg: 'from-blue-500 to-cyan-600', shadow: 'shadow-blue-500/20', icon: 'fa-apple-whole', txt: 'text-blue-100'},
+                        {bg: 'from-amber-500 to-orange-600', shadow: 'shadow-amber-500/20', icon: 'fa-leaf', txt: 'text-amber-100'},
+                        {bg: 'from-indigo-500 to-purple-600', shadow: 'shadow-indigo-500/20', icon: 'fa-cubes-stacked', txt: 'text-indigo-100'},
+                        {bg: 'from-rose-500 to-pink-600', shadow: 'shadow-rose-500/20', icon: 'fa-box', txt: 'text-rose-100'},
+                        {bg: 'from-emerald-500 to-teal-600', shadow: 'shadow-emerald-500/20', icon: 'fa-boxes-packing', txt: 'text-emerald-100'}
+                    ];
+                    
+                    dynContainer.innerHTML = State.categories.map((cat, i) => {
+                        const theme = cardThemes[i % cardThemes.length];
+                        return `<div class="bg-gradient-to-br ${theme.bg} rounded-2xl p-5 text-white shadow-lg ${theme.shadow} relative overflow-hidden transition-all hover:-translate-y-1">
+                            <div class="absolute -right-4 -top-4 opacity-20"><i class="fa-solid ${theme.icon} text-7xl"></i></div>
+                            <p class="${theme.txt} text-sm font-medium mb-1">Bahan ${cat}</p>
+                            <h3 class="text-3xl font-bold mb-2">${catStats[cat] || 0} <span class="text-sm font-normal">Item</span></h3>
+                            <p class="text-xs ${theme.txt}">Tersedia di Database</p>
+                        </div>`;
+                    }).join('');
+                }
 
                 // Mengubah UI berdasarkan Role (Warehouse vs Store)
                 if (State.user.role === 'Admin Warehouse') {
-                    document.querySelectorAll('.store-only-card').forEach(el => el.classList.add('hidden'));
+                    if(dynContainer) dynContainer.classList.add('hidden');
                     document.querySelectorAll('.wh-only-card').forEach(el => el.classList.remove('hidden'));
                     
                     let sjAktif = 0; let sjSelesai = 0;
@@ -1240,7 +1300,7 @@
                     document.getElementById('dashSjCount').innerHTML = `${sjAktif} <span class="text-sm font-normal">Dokumen</span>`;
                     document.getElementById('dashSjDoneCount').innerHTML = `${sjSelesai} <span class="text-sm font-normal">Dokumen</span>`;
                 } else {
-                    document.querySelectorAll('.store-only-card').forEach(el => el.classList.remove('hidden'));
+                    if(dynContainer) dynContainer.classList.remove('hidden');
                     document.querySelectorAll('.wh-only-card').forEach(el => el.classList.add('hidden'));
                 }
 
@@ -1249,7 +1309,7 @@
                 State.dashRecentPage = 1;
                 
                 renderDashRecentTable();
-                updateChartsWithData(fIn, fOut, f, d, chartFilter, chartTypeFilter);
+                updateChartsWithData(fIn, fOut, catStats, chartFilter, chartTypeFilter);
                 els.forEach(el => el.classList.remove('updating'));
             }, 300);
         }
@@ -1313,15 +1373,26 @@
             const ctxP = document.getElementById('pieChart').getContext('2d');
             pieChartInst = new Chart(ctxP, { 
                 type: 'doughnut', 
-                data: { labels: ['Frozen','Dry'], datasets: [{data:[0,0], backgroundColor:['#3b82f6','#f59e0b'], borderWidth:0}] }, 
+                data: { labels: [], datasets: [{data:[], backgroundColor:[], borderWidth:0}] }, 
                 options: {responsive:true, maintainAspectRatio:false, cutout:'75%', plugins: {legend:{display:false}}} 
             });
         }
 
-        function updateChartsWithData(inData, outData, countFrozen, countDry, chartFilter, chartTypeFilter) {
+        function updateChartsWithData(inData, outData, catStats, chartFilter, chartTypeFilter) {
             if(pieChartInst) {
-                pieChartInst.data.datasets[0].data = [countFrozen, countDry];
+                const labels = State.categories || ['Buah', 'Sayur', 'Bahan Baku'];
+                const data = labels.map(c => catStats[c] || 0);
+                const bgColors = ['#3b82f6', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#ec4899'];
+                
+                pieChartInst.data.labels = labels;
+                pieChartInst.data.datasets[0].data = data;
+                pieChartInst.data.datasets[0].backgroundColor = bgColors.slice(0, labels.length);
                 pieChartInst.update();
+
+                const legend = document.getElementById('pieChartLegend');
+                if(legend) {
+                    legend.innerHTML = labels.map((l, i) => `<div class="flex items-center gap-1.5"><div class="w-3 h-3 rounded-full shadow-sm" style="background-color: ${bgColors[i%bgColors.length]}"></div> ${l}</div>`).join('');
+                }
             }
 
             if(!mainChartInst) return;
@@ -1365,7 +1436,7 @@
 
         // --- FUNGSI KAMERA SCANNER (MULTI-PURPOSE) ---
         let html5QrCode = null;
-        let activeScannerTarget = ''; // 'frm' (Manual Form), 'sj' (Cart SJ), 'sj_number' (Input No SJ), 'inbound_sj' (Cari SJ)
+        let activeScannerTarget = ''; 
 
         function openScanner(targetPrefix) {
             activeScannerTarget = targetPrefix;
@@ -1403,13 +1474,12 @@
         }
 
         function onScanSuccess(decodedText, decodedResult) {
-            // Hentikan scanner dengan aman sebelum memanipulasi DOM/SweetAlert
             if (html5QrCode && html5QrCode.isScanning) {
                 html5QrCode.stop().then(() => {
                     processScanResult(decodedText);
                 }).catch(err => {
                     console.log(err);
-                    processScanResult(decodedText); // Tetap lanjut meskipun gagal stop stream
+                    processScanResult(decodedText); 
                 });
             } else {
                 processScanResult(decodedText);
@@ -1423,21 +1493,17 @@
             
             const text = String(decodedText).trim().toUpperCase();
             
-            if(State.scannerTarget === 'sj_number_out') {
+            if(activeScannerTarget === 'sj_number') {
                 document.getElementById('sjNumber').value = text;
                 return;
-            } else if (State.scannerTarget === 'sj_number_in') {
+            } else if (activeScannerTarget === 'inbound_sj') {
                 document.getElementById('inboundSearchSj').value = text; 
-                searchSjToReceive();
+                fetchSuratJalanForInbound();
                 return;
             }
 
-            // Menentukan prefix form tujuan berdasarkan target tombol scanner
-            let prefix = 'frm'; // Default ke form input manual
-            if (State.scannerTarget === 'item_sj') prefix = 'sj';
-            else if (State.scannerTarget === 'item_manual') prefix = 'frm';
+            let prefix = activeScannerTarget || 'frm'; 
 
-            // Dapatkan Resto yang sedang aktif di form tersebut
             let selectedResto = '';
             const restoElement = document.getElementById(prefix === 'sj' ? 'sjResto' : 'frmResto');
             if (restoElement) selectedResto = restoElement.value.trim().toUpperCase();
@@ -1446,14 +1512,12 @@
                 selectedResto = State.user.resto.toUpperCase();
             }
 
-            // Cari bahan di Master Data yang sesuai dengan Barcode dan Resto
             const item = State.masterData.find(m => 
                 String(m.KodeBahan).trim().toUpperCase() === text && 
                 (selectedResto === '' || String(m.Resto).trim().toUpperCase() === selectedResto || String(m.Resto).trim().toUpperCase() === 'SEMUA RESTO')
             );
 
             if (item) {
-                // Panggil fungsi selectBahan dengan 3 argumen yang benar (kode, nama, prefix_form)
                 selectBahan(item.KodeBahan, item.NamaBahan.replace(/'/g, "\\'"), prefix);
             } else {
                 Swal.fire({icon:'warning', title:'Tidak Ditemukan', text:`Barcode [${text}] tidak terdaftar di Master Data untuk resto ini.`, toast:true, position:'top', timer:3500});
@@ -1476,8 +1540,7 @@
             } catch (e) {}
         }
 
-
-        // --- CUSTOM DROPDOWN BAHAN LOGIC (SUPPORT PREFIX) ---
+        // --- CUSTOM DROPDOWN BAHAN LOGIC ---
         function setupDropdownBahan(prefix) {
             let resto = '';
             if (prefix === 'frm') resto = document.getElementById('frmResto') ? document.getElementById('frmResto').value : '';
@@ -1563,7 +1626,6 @@
             processBahanSelection(kode, prefix); 
         }
 
-        // Logic saat bahan dipilih dari dropdown
         function processBahanSelection(scanText, prefix) {
             let selectedResto = '';
             if (prefix === 'frm') selectedResto = document.getElementById('frmResto').value.trim().toUpperCase();
@@ -1581,7 +1643,6 @@
                     sel.disabled = false;
                 }
                 
-                // Khusus Form Outbound Manual (Bukan SJ)
                 if(prefix === 'frm' && State.transactionType === 'outbound') {
                     const stocks = State.stockData.filter(s => String(s.KodeBahan).trim().toUpperCase() === scanText && String(s.Resto).trim().toUpperCase() === selectedResto);
                     
@@ -1641,7 +1702,6 @@
             renderSjHistory();
         }
 
-        // Event listener saat Resto tujuan berubah, reset form item
         document.addEventListener('change', e => {
             if(e.target && e.target.id === 'sjResto') {
                 document.getElementById('sjSearchBahan').value = '';
@@ -1672,10 +1732,9 @@
 
             State.sjCart.push({
                 kode: kode, nama: nama, kategori: kat, qty: parseFloat(qty), satuan: satuan, 
-                produksi: prod, exp: exp, lot: '-' // Lot dikosongkan karena diisi oleh tujuan
+                produksi: prod, exp: exp, lot: '-' 
             });
 
-            // Reset Item Form
             document.getElementById('sjSearchBahan').value = '';
             document.getElementById('sjKodeBahan').value = '';
             document.getElementById('sjQty').value = '';
@@ -1738,7 +1797,6 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            // Header SJ
             doc.setFontSize(18);
             doc.text("SURAT JALAN (DELIVERY ORDER)", 14, 20);
             
@@ -1748,7 +1806,6 @@
             doc.text(`Resto Tujuan    : ${sj.restoTujuan}`, 14, 40);
             doc.text(`Pengirim        : ${sj.pengirim}`, 14, 45);
 
-            // Table SJ
             const headers = [['No', 'Kode Bahan', 'Nama Bahan', 'Qty', 'Satuan', 'Prod Date', 'Exp Date']];
             const body = sj.items.map((item, i) => [
                 i + 1, item.kode, item.nama, item.qty, item.satuan, item.produksi || '-', item.exp || '-'
@@ -1763,7 +1820,6 @@
                 styles: { fontSize: 9 }
             });
 
-            // Signatures
             const finalY = doc.lastAutoTable.finalY || 55;
             doc.text("Diterima Oleh,", 30, finalY + 20);
             doc.text("(.........................)", 20, finalY + 45);
@@ -1818,7 +1874,6 @@
                         renderSjCart();
                         renderSjHistory();
                     }).catch(e => {
-                        // Simulasi jika server belum menerapkan update SJ DB
                         State.suratJalanList.push(payloadSj);
                         let promises = [];
                         State.sjCart.forEach(item => {
@@ -1855,7 +1910,6 @@
             const tbody = document.getElementById('sjHistoryTableBody');
             if(!tbody) return;
 
-            // Sort by Tanggal descending
             const sortedSJ = [...State.suratJalanList].sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal));
 
             if (sortedSJ.length === 0) {
@@ -1888,10 +1942,9 @@
             document.getElementById('scanPageTitle').textContent = type === 'inbound' ? 'Input Barang Masuk' : 'Input Barang Keluar';
             document.getElementById('scanHistTitle').textContent = type === 'inbound' ? 'Riwayat Barang Masuk' : 'Riwayat Barang Keluar';
             
-            // Konfigurasi Inbound Modal (Toggle SJ vs Manual)
             if (type === 'inbound') {
                 document.getElementById('inboundModeToggle').classList.remove('hidden');
-                switchInboundMode('manual'); // Default
+                switchInboundMode('manual');
             } else {
                 document.getElementById('inboundModeToggle').classList.add('hidden');
                 document.getElementById('containerInboundSj').classList.add('hidden');
@@ -1921,6 +1974,7 @@
             }
 
             buildCheckboxDropdown('scan', 'scan');
+            populateCategoryDropdowns();
             initScanHistory();
             
             setupDropdownBahan('frm');
@@ -1953,14 +2007,12 @@
             const inputSj = document.getElementById('inboundSearchSj').value.trim().toUpperCase();
             if (!inputSj) return Swal.fire('Info', 'Ketik nomor Surat Jalan terlebih dahulu', 'info');
 
-            // Cari di state lokal Surat Jalan
             const sj = State.suratJalanList.find(s => s.id === inputSj);
             
             const resultBox = document.getElementById('inboundSjResult');
             const tbody = document.getElementById('inboundSjTableBody');
             
             if (sj) {
-                // Verifikasi tujuan
                 if (State.user.role !== 'Admin' && sj.restoTujuan !== State.user.resto) {
                     return Swal.fire('Akses Ditolak', 'Surat Jalan ini tidak ditujukan untuk restoran Anda.', 'error');
                 }
@@ -1993,7 +2045,6 @@
         function processInboundSj() {
             if (!activeInboundSjData) return;
 
-            // Validasi Lot Input
             let valid = true;
             let finalItemsToProcess = [];
 
@@ -2029,13 +2080,11 @@
                         
                         initScanHistory();
                     }).catch(e => {
-                        // Fallback Simulasi jika backend tidak mendukung endpoint
                         let promises = [];
                         finalItemsToProcess.forEach(payload => {
                             promises.push(runGas('saveTransaction', 'inbound', payload));
                         });
                         
-                        // Update status lokal
                         const sjIndex = State.suratJalanList.findIndex(s => s.id === activeInboundSjData.id);
                         if (sjIndex > -1) State.suratJalanList[sjIndex].status = 'Diterima';
 
@@ -2375,6 +2424,7 @@
         function loadDataTableView(container, viewId) {
             container.appendChild(document.getElementById('tpl-datatable').content.cloneNode(true));
             buildCheckboxDropdown('data', 'data');
+            populateCategoryDropdowns();
 
             let headers = [];
             let dataList = [];
@@ -2891,10 +2941,16 @@
             const selOptions = State.restos.map(r=>`<option value="${r}">${r}</option>`).join('');
             document.querySelectorAll('.set-resto-select').forEach(sel => sel.innerHTML = selOptions);
             
-            renderRestoTable(); renderUserTable(); renderMasterTable(); toggleUserFields();
+            renderRestoTable(); 
+            renderCategoryTable();
+            renderUserTable(); 
+            renderMasterTable(); 
+            toggleUserFields();
+            populateCategoryDropdowns();
         }
+        
         function switchSetTab(t) {
-            ['app','resto','user','master'].forEach(x => {
+            ['app','resto','kategori','user','master'].forEach(x => {
                 document.getElementById(`setTab-${x}`).classList.add('hidden');
                 document.getElementById(`tabBtn-${x}`).className = "px-4 py-2 text-sm font-medium rounded-lg text-slate-500 hover:bg-slate-50 whitespace-nowrap";
             });
@@ -2954,6 +3010,54 @@
 
         function renderRestoTable() {
             document.getElementById('tblRestoList').innerHTML = State.restos.map((r,i)=>`<tr class="hover:bg-slate-50"><td class="px-5 py-3">${r}</td><td class="px-5 py-3 text-center"><button onclick="deleteRestoItem(${i})" class="text-red-500 hover:bg-red-50 px-2 py-1 rounded"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
+        }
+
+        // KATEGORI BAHAN LOGIC
+        function saveNewCategory() {
+            const val = document.getElementById('setNewCategory').value.trim();
+            if(!val) return;
+            Swal.fire({title: 'Menyimpan...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
+
+            State.categories.push(val);
+            document.getElementById('setNewCategory').value='';
+            renderCategoryTable();
+            populateCategoryDropdowns();
+
+            runGas('addCategory', val).then(d => {
+                if(d) syncLocalState(d);
+                renderCategoryTable();
+                populateCategoryDropdowns();
+                Swal.fire({icon: 'success', title: 'Tersimpan', toast: true, position: 'top-end', showConfirmButton: false, timer: 1500});
+            }).catch(e => {
+                // Fallback local API
+                Swal.fire({icon: 'success', title: 'Tersimpan', text: 'Tersimpan di local (Simulasi API)', toast: true, position: 'top-end', showConfirmButton: false, timer: 1500});
+            });
+        }
+
+        function deleteCategoryItem(idx) {
+            Swal.fire({title: 'Hapus Kategori?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya, Hapus', confirmButtonColor: '#ef4444'}).then(r => {
+                if(r.isConfirmed) {
+                    Swal.fire({title: 'Menghapus...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
+                    State.categories.splice(idx, 1);
+                    renderCategoryTable();
+                    populateCategoryDropdowns();
+                    
+                    runGas('deleteCategory', idx).then(d=>{
+                        if(d) syncLocalState(d);
+                        renderCategoryTable();
+                        populateCategoryDropdowns();
+                        Swal.fire({icon: 'success', title: 'Terhapus', toast: true, position: 'top-end', showConfirmButton: false, timer: 1500});
+                    }).catch(e => { 
+                        // Fallback local API
+                        Swal.fire({icon: 'success', title: 'Terhapus', text: 'Terhapus di local (Simulasi API)', toast: true, position: 'top-end', showConfirmButton: false, timer: 1500});
+                    });
+                }
+            });
+        }
+
+        function renderCategoryTable() {
+            const tbl = document.getElementById('tblCategoryList');
+            if(tbl) tbl.innerHTML = State.categories.map((c,i)=>`<tr class="hover:bg-slate-50"><td class="px-5 py-3">${c}</td><td class="px-5 py-3 text-center"><button onclick="deleteCategoryItem(${i})" class="text-red-500 hover:bg-red-50 px-2 py-1 rounded"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
         }
 
         function toggleUserFields() {
