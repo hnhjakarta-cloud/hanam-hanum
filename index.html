@@ -358,6 +358,10 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Tanggal Transaksi</label>
+                            <input type="datetime-local" id="frmTanggal" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50" required>
+                        </div>
+                        <div>
                             <label class="block text-xs font-medium text-slate-500 mb-1">Resto (Lokasi Stock)</label>
                             <select id="frmResto" onchange="handleScanRestoChange()" class="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none bg-white font-medium text-slate-700"></select>
                         </div>
@@ -2088,6 +2092,13 @@
             const sel = document.getElementById('frmSatuan');
             if(sel) { sel.innerHTML = ''; sel.disabled = true; }
             
+            const frmTanggal = document.getElementById('frmTanggal');
+            if(frmTanggal) {
+                const now = new Date();
+                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                frmTanggal.value = now.toISOString().slice(0,16);
+            }
+            
             if(State.transactionType === 'outbound') {
                 const sys = document.getElementById('frmStockSystem'); if(sys) sys.textContent = "0";
                 const bsr = document.getElementById('frmStockBesar'); if(bsr) bsr.textContent = "";
@@ -2099,6 +2110,7 @@
             const rawQty = document.getElementById('frmQty').value;
             
             const payload = {
+                tanggal: document.getElementById('frmTanggal').value,
                 kode: document.getElementById('frmKodeBahan').value.trim(), 
                 nama: document.getElementById('frmNamaBahan').value.trim(),
                 kategori: document.getElementById('frmKategori').value, 
@@ -2577,23 +2589,32 @@
                             <!-- Detail akan diinjeksi via JS -->
                         </div>
 
+                        <div><label class="block text-xs font-medium text-slate-500 mb-1">Tanggal Adjustment</label><input type="datetime-local" id="adjTanggal" class="w-full border border-slate-300 px-3 py-2 text-sm rounded-lg outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"></div>
                         <div><label class="block text-xs font-medium text-slate-500 mb-1">Stock Fisik Saat Ini (Satuan Besar)</label><input type="number" id="adjFisik" class="w-full border border-slate-300 px-3 py-2 text-sm rounded-lg outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: 10"></div>
                         <div><label class="block text-xs font-medium text-slate-500 mb-1">Keterangan / Alasan</label><textarea id="adjAlasan" class="w-full border border-slate-300 px-3 py-2 text-sm rounded-lg outline-none focus:ring-2 focus:ring-blue-500" rows="2" placeholder="Barang rusak, selisih hitung, dll"></textarea></div>
                     </div>`,
                 showCancelButton: true, confirmButtonText: 'Ajukan Perubahan', confirmButtonColor: '#2563eb',
                 didOpen: () => {
                     updateAdjPreview();
+                    const adjTgl = document.getElementById('adjTanggal');
+                    if(adjTgl) {
+                        const now = new Date();
+                        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+                        adjTgl.value = now.toISOString().slice(0,16);
+                    }
                 },
                 preConfirm: () => {
                     const idx = document.getElementById('adjKodeIdx').value; 
                     const fisik = document.getElementById('adjFisik').value; 
                     const alasan = document.getElementById('adjAlasan').value;
+                    const tanggal = document.getElementById('adjTanggal').value;
                     
-                    if(!idx || !fisik || !alasan) return Swal.showValidationMessage('Lengkapi semua data!');
+                    if(!idx || !fisik || !alasan || !tanggal) return Swal.showValidationMessage('Lengkapi semua data!');
                     
                     const stockItem = window.tempAdjStockData[idx];
                     
                     return { 
+                        tanggal: tanggal,
                         kode: stockItem.KodeBahan, nama: stockItem.NamaBahan, qtySystem: stockItem.QtyBesar, 
                         qtyFisik: fisik, satuan: stockItem.QtyBesar.replace(/[0-9.\-]/g, '').trim(), 
                         alasan, pengaju: State.user.name, resto: stockItem.Resto,
